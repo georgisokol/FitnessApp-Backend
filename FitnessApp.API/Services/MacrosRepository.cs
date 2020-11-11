@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
 
 namespace FitnessApp.API.Services
 {
@@ -53,51 +53,57 @@ namespace FitnessApp.API.Services
             _context.MealMacros.Remove(mealMacros);
         }
 
-        public DailyMacroTargets GetDailyMacroTargets()
+        public DailyMacroTargets GetDailyMacroTargets(Guid userUid)
         {
-            return _context.DailyMacroTargets.Where(c => c.DeletedOn == null).FirstOrDefault();
+            return _context.DailyMacroTargets.Where(c => c.DeletedOn == null && c.UserFk == userUid).FirstOrDefault();
         }
 
-        public DailyMacroIntakeDto GetDailyMealMacrosSummed()
+        public DailyMacroIntakeDto GetDailyMealMacrosSummed(Guid userUid)
         {
-
-            var sums = _context.MealMacros.GroupBy(x => true).Select(x => new DailyMacroIntakeDto()
+            var sums = _context.MealMacros.Where(mm => mm.UserFk == userUid).GroupBy(x => true).Select(x => new DailyMacroIntakeDto()
             {
                 Protein = x.Sum(y => y.Protein),
                 Carbs = x.Sum(y => y.Carbs),
                 Fats = x.Sum(y => y.Fats)
-
-
             });
+
             return sums.FirstOrDefault();
         }
 
-        public IEnumerable<DailyMacroIntakeHistory> GetDailyMealsHistory()
+        public IEnumerable<DailyMacroIntakeHistory> GetDailyMealsHistory(Guid userUid)
         {
-            return _context.DailyMacroIntakeHistory.OrderBy(c => c.CreatedOn).ToList();
+            return _context.DailyMacroIntakeHistory.Where(h => h.UserFk == userUid).OrderBy(c => c.CreatedOn).ToList();
         }
 
-        public IEnumerable<MealMacros> GetMealMacros()
+        public IEnumerable<MealMacros> GetMealMacros(Guid userUid)
         {
-            return _context.MealMacros.OrderBy(c => c.CreatedOn).ToList();
+            return _context.MealMacros.Where(mm => mm.UserFk == userUid).OrderBy(c => c.CreatedOn).ToList();
         }
 
-        public MealMacros GetMealMacrosByUid(Guid Uid)
+        public MealMacros GetMealMacrosByUid(Guid mealMacroUid)
         {
-            return _context.MealMacros.Where(c => c.UId == Uid).FirstOrDefault();
+            return _context.MealMacros.Where(c => c.UId == mealMacroUid).FirstOrDefault();
         }
 
-        public IEnumerable<SavedMeals> GetSavedMeals()
+        public IEnumerable<SavedMeals> GetSavedMeals(Guid userUid)
         {
-            return _context.SavedMeals.ToList();
+            return _context.SavedMeals.Where(m => m.UserFk == userUid).ToList();
         }
 
-        public Users GetUsers()
+        public Users GetUserByUid(Guid userUid)
         {
-            return _context.Users.Where(c => c.DeletedOn == null).FirstOrDefault();
+            return _context.Users.Where(c => c.DeletedOn == null && c.Uid == userUid).FirstOrDefault();
         }
 
-      
+        public Users GetUserByUsername(string username)
+        {
+            return _context.Users.FirstOrDefault(u => u.Username.Equals(username));
+        }
+
+        public void RegisterUser(Users user)
+        {
+            _context.Users.Add(user);
+        }
 
         public bool Save()
         {

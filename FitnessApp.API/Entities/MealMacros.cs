@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FitnessApp.API.Entities
 {
@@ -33,5 +30,7 @@ namespace FitnessApp.API.Entities
 
         [MaxLength(50)]
         public string MealName { get; set; }
+
+        public Guid UserFk { get; set; }
     }
 }

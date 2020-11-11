@@ -2,18 +2,17 @@
 using FitnessApp.API.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FitnessApp.API.Services
 {
     public interface IMacrosRepository
     {
        
-        DailyMacroTargets GetDailyMacroTargets();
-        IEnumerable<MealMacros> GetMealMacros();
+        DailyMacroTargets GetDailyMacroTargets(Guid userUid);
 
-        IEnumerable<DailyMacroIntakeHistory> GetDailyMealsHistory();
+        IEnumerable<MealMacros> GetMealMacros(Guid userUid);
+
+        IEnumerable<DailyMacroIntakeHistory> GetDailyMealsHistory(Guid userUid);
 
         void AddMealMacros(MealMacros mealMacros);
 
@@ -23,19 +22,23 @@ namespace FitnessApp.API.Services
 
         void AddDailyIntakeToHistory(DailyMacroIntakeHistory dailyMacroIntake);
 
-        MealMacros GetMealMacrosByUid(Guid Uid);
+        MealMacros GetMealMacrosByUid(Guid mealMacroUid);
 
-        DailyMacroIntakeDto GetDailyMealMacrosSummed();
+        DailyMacroIntakeDto GetDailyMealMacrosSummed(Guid userUid);
 
-        IEnumerable<SavedMeals> GetSavedMeals();
+        IEnumerable<SavedMeals> GetSavedMeals(Guid userUid);
 
         void AddSavedMeal(SavedMeals savedMeal);
 
-        Users GetUsers();
+        Users GetUserByUid(Guid userUid);
+
+        Users GetUserByUsername(string username);
 
         void AddActiveDailyMacroTargets(DailyMacroTargets dailyMacroTargets);
 
         void AddUser(Users user);
+
+        void RegisterUser(Users user);
 
         bool Save();
     }
