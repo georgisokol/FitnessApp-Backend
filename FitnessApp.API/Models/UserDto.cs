@@ -26,5 +26,10 @@ namespace FitnessApp.API.Models
         public ExerciseTypeEnum Type { get; set; }
 
         public ExerciseGoalEnum Goal { get; set; }
+        public string Username { get; set; }
+
+        public string Password { get; set; }
+
+        public string Salt { get; set; }
     }
 }

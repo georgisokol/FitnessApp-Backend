@@ -33,5 +33,7 @@ namespace FitnessApp.API.Entities
 
         [MaxLength(50)]
         public string MealName { get; set; }
+
+        public Guid UserFk { get; set; }
     }
 }

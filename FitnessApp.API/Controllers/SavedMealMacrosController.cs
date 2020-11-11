@@ -4,11 +4,10 @@ using FitnessApp.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FitnessApp.API.Controllers
 {
+    [Route("api/savedmeals")]
     [ApiController]
     public class SavedMealMacrosController : ControllerBase
     {
@@ -20,10 +19,12 @@ namespace FitnessApp.API.Controllers
             _macrosRepository = macrosRepository ?? throw new ArgumentNullException(nameof(macrosRepository));
             _mapper = mapper;
         }
-       [HttpGet("api/savedmeals")]
-       public IActionResult GetSavedMeals()
+
+       [HttpGet("{userUid:guid}")]
+       public IActionResult GetSavedMeals([FromRoute] Guid userUid)
         {
-            var savedMeals = _macrosRepository.GetSavedMeals();
+            var savedMeals = _macrosRepository.GetSavedMeals(userUid);
+
             if(savedMeals == null)
             {
                 return NotFound();
@@ -32,8 +33,8 @@ namespace FitnessApp.API.Controllers
             return Ok(_mapper.Map<IEnumerable<SavedMealsDto>>(savedMeals));
         }
 
-        [HttpPost("api/savedmeals", Name = "GetSavedMeals")]
-        public IActionResult AddMealToSavedMeals([FromBody] SavedMealsForCreation savedMealForCreation)
+        [HttpPost("{userUid:guid}", Name = "GetSavedMeals")]
+        public IActionResult AddMealToSavedMeals([FromRoute] Guid userUid, [FromBody] SavedMealsForCreation savedMealForCreation)
         {
             var finalSavedMealDto = new SavedMealsDto()
             {
@@ -42,18 +43,16 @@ namespace FitnessApp.API.Controllers
                 Protein = savedMealForCreation.Protein,
                 Carbs = savedMealForCreation.Carbs,
                 Fats = savedMealForCreation.Fats,
-                MealName = savedMealForCreation.MealName
-                
+                MealName = savedMealForCreation.MealName,
+                UserUid = userUid
             };
 
             var finalSavedMeal = _mapper.Map<Entities.SavedMeals>(finalSavedMealDto);
+
             _macrosRepository.AddSavedMeal(finalSavedMeal);
             _macrosRepository.Save();
 
             return CreatedAtRoute("GetSavedmeals", finalSavedMealDto);
-
         }
-
-
     }
 }

@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FitnessApp.API.Models
 {
     public class DailyMacroTargetsDto
     {
-        public System.DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
 
-        public System.DateTime? DeletedOn { get; set; }
+        public DateTime? DeletedOn { get; set; }
+
         public Guid UId { get; set; }
+
         public int TProtein { get; set; }
 
         public int TCarbs { get; set; }
@@ -24,5 +23,7 @@ namespace FitnessApp.API.Models
         public int RFats { get; set; }
 
         public bool CustomMacros { get; set; }
+
+        public Guid UserUid { get; set; }
     }
 }

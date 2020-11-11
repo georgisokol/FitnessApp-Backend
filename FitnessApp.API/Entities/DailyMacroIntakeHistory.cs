@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FitnessApp.API.Entities
 {
@@ -15,9 +12,11 @@ namespace FitnessApp.API.Entities
 
         public Guid UId { get; set; }
 
-        public System.DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
 
-        public System.DateTime? DeletedOn { get; set; }
+        public DateTime? DeletedOn { get; set; }
+
+        public Guid UserFk { get; set; }
 
         [MaxLength(4)]
         [Required]
