@@ -176,16 +176,16 @@ namespace FitnessApp.API.Controllers
             return Ok(dailyIntakeSummed);
         }
 
-        [HttpGet("api/dailymeals/history")]
-        public IActionResult GetDailyMealsHistory()
+        [HttpGet("api/dailymeals/history/{month}")]
+        public IActionResult GetDailyMealsHistory(string month)
         {
-            var dailyMealsHistory = _macrosRepository.GetDailyMealsHistory();
+            var dailyMealsHistory = _macrosRepository.GetDailyMealsHistory(month);
             if(dailyMealsHistory == null)
             {
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<IEnumerable<DailyMacrosIntakeHistoryDto>>(dailyMealsHistory));
+            return Ok(_mapper.Map<List<DailyMacrosIntakeHistoryDto>>(dailyMealsHistory));
         }
 
     }

@@ -72,9 +72,9 @@ namespace FitnessApp.API.Services
             return sums.FirstOrDefault();
         }
 
-        public IEnumerable<DailyMacroIntakeHistory> GetDailyMealsHistory()
+        public IEnumerable<DailyMacroIntakeHistory> GetDailyMealsHistory(string Month)
         {
-            return _context.DailyMacroIntakeHistory.OrderBy(c => c.CreatedOn).ToList();
+            return _context.DailyMacroIntakeHistory.Where(c => c.CreatedOn.Month.ToString("d2") == Month).ToList();
         }
 
         public IEnumerable<MealMacros> GetMealMacros()

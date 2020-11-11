@@ -31,15 +31,32 @@ namespace FitnessApp.API.Services
         public void ClearTheDailyIntakeMacrosAndMoveItToHistory()
         {
             var dailySummedMacros = _macrosRepository.GetDailyMealMacrosSummed();
-
-            var dailyMacrosIntakeForHistoryDto = new DailyMacrosIntakeHistoryDto()
+            var dailyMacrosIntakeForHistoryDto = new DailyMacrosIntakeHistoryDto();
+            if (dailySummedMacros == null)
             {
-                UId = Guid.NewGuid(),
-                CreatedOn = DateTime.Now,
-                Protein = dailySummedMacros.Protein,
-                Carbs = dailySummedMacros.Carbs,
-                Fats = dailySummedMacros.Fats
-            };
+                dailyMacrosIntakeForHistoryDto = new DailyMacrosIntakeHistoryDto()
+                {
+                    UId = Guid.NewGuid(),
+                    CreatedOn = DateTime.Now,
+                    Protein = 0,
+                    Carbs = 0,
+                    Fats = 0
+
+                };
+               
+            } else
+            {
+                dailyMacrosIntakeForHistoryDto = new DailyMacrosIntakeHistoryDto()
+                {
+                    UId = Guid.NewGuid(),
+                    CreatedOn = DateTime.Now,
+                    Protein = dailySummedMacros.Protein,
+                    Carbs = dailySummedMacros.Carbs,
+                    Fats = dailySummedMacros.Fats
+                };
+            }
+
+             
 
             var finalDailyMacrosIntakeForHistory = _mapper.Map<Entities.DailyMacroIntakeHistory>(dailyMacrosIntakeForHistoryDto);
 

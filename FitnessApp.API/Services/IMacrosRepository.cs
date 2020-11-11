@@ -13,7 +13,7 @@ namespace FitnessApp.API.Services
         DailyMacroTargets GetDailyMacroTargets();
         IEnumerable<MealMacros> GetMealMacros();
 
-        IEnumerable<DailyMacroIntakeHistory> GetDailyMealsHistory();
+        IEnumerable<DailyMacroIntakeHistory> GetDailyMealsHistory(string Month);
 
         void AddMealMacros(MealMacros mealMacros);
 
