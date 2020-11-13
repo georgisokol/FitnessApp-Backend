@@ -44,7 +44,7 @@ namespace FitnessApp.API.Controllers
                 Carbs = savedMealForCreation.Carbs,
                 Fats = savedMealForCreation.Fats,
                 MealName = savedMealForCreation.MealName,
-                UserUid = userUid
+                UserFk = userUid
             };
 
             var finalSavedMeal = _mapper.Map<Entities.SavedMeals>(finalSavedMealDto);

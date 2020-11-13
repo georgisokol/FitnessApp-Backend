@@ -58,26 +58,42 @@ namespace FitnessApp.API.Services
             return _context.DailyMacroTargets.Where(c => c.DeletedOn == null && c.UserFk == userUid).FirstOrDefault();
         }
 
+        public IEnumerable<MealMacros> GetDailyMealMacrosByUser(Guid userUid)
+        {
+          
+                return _context.MealMacros.Where(mm => mm.UserFk == userUid).OrderBy(c => c.CreatedOn).ToList();
+            
+        }
+
         public DailyMacroIntakeDto GetDailyMealMacrosSummed(Guid userUid)
         {
             var sums = _context.MealMacros.Where(mm => mm.UserFk == userUid).GroupBy(x => true).Select(x => new DailyMacroIntakeDto()
             {
                 Protein = x.Sum(y => y.Protein),
                 Carbs = x.Sum(y => y.Carbs),
-                Fats = x.Sum(y => y.Fats)
+                Fats = x.Sum(y => y.Fats),
+                UserFk = userUid
             });
 
             return sums.FirstOrDefault();
         }
 
-        public IEnumerable<DailyMacroIntakeHistory> GetDailyMealsHistory(Guid userUid, string Month)
+        public List<DailyMacroIntakeDto> GetDailyMealMacrosSummedForAllUsers()
         {
-            return _context.DailyMacroIntakeHistory.Where(h => h.UserFk == userUid && h.CreatedOn.Month.ToString("d2") == Month ).ToList();
+            var listOfSums = _context.MealMacros.GroupBy(x => x.UserFk).Select(g => new DailyMacroIntakeDto()
+            {
+                Protein = g.Sum(y => y.Protein),
+                Carbs = g.Sum(y => y.Carbs),
+                Fats = g.Sum(y => y.Fats),
+                UserFk = g.Key
+            }).ToList();
+            return listOfSums;
         }
 
-        public IEnumerable<MealMacros> GetMealMacros(Guid userUid)
+
+        public IEnumerable<DailyMacroIntakeHistory> GetDailyMealsHistory(Guid userUid, string Month)
         {
-            return _context.MealMacros.Where(mm => mm.UserFk == userUid).OrderBy(c => c.CreatedOn).ToList();
+            return _context.DailyMacroIntakeHistory.Where(h => h.UserFk == userUid && h.CreatedOn.Month.ToString("d2").Equals(Month)).ToList();
         }
 
         public MealMacros GetMealMacrosByUid(Guid mealMacroUid)

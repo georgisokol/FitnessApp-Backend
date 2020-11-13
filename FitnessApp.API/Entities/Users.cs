@@ -27,18 +27,19 @@ namespace FitnessApp.API.Entities
 
         public string Salt { get; set; }
 
-        public int Age { get; set; }
+        public int? Age { get; set; }
 
-        public Gender Gender {get; set; }
+        public Gender? Gender {get; set; }
 
-        public int Height { get; set; }
+        public int? Height { get; set; }
 
-        public int Weight { get; set; }
+        public int? Weight { get; set; }
 
-        public ExerciseFrequencyEnum Frequency { get; set; }
+        public ExerciseFrequencyEnum? Frequency { get; set; }
 
-        public ExerciseTypeEnum Type { get; set; }
+        public ExerciseTypeEnum? Type { get; set; }
 
-        public ExerciseGoalEnum Goal { get; set; }
+        public ExerciseGoalEnum? Goal { get; set; }
+
     }
 }

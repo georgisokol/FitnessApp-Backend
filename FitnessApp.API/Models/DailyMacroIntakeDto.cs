@@ -1,4 +1,6 @@
-﻿namespace FitnessApp.API.Models
+﻿using System;
+
+namespace FitnessApp.API.Models
 {
     public class DailyMacroIntakeDto
     {
@@ -7,6 +9,8 @@
         public int Carbs { get; set; }
 
         public int Fats { get; set; }
+
+        public Guid UserFk { get; set; }
 
     }
 }

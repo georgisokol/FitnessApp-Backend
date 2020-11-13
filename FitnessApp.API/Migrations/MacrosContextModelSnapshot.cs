@@ -40,6 +40,8 @@ namespace FitnessApp.API.Migrations
 
                     b.Property<Guid>("UId");
 
+                    b.Property<Guid>("UserFk");
+
                     b.HasKey("Id");
 
                     b.ToTable("DailyMacroIntakeHistory");
@@ -57,6 +59,8 @@ namespace FitnessApp.API.Migrations
 
                     b.Property<DateTime?>("DeletedOn");
 
+                    b.Property<string>("IsFirstTime");
+
                     b.Property<int>("RCarbs");
 
                     b.Property<int>("RFats");
@@ -70,6 +74,8 @@ namespace FitnessApp.API.Migrations
                     b.Property<int>("TProtein");
 
                     b.Property<Guid>("UId");
+
+                    b.Property<Guid>("UserFk");
 
                     b.HasKey("Id");
 
@@ -100,6 +106,8 @@ namespace FitnessApp.API.Migrations
 
                     b.Property<Guid>("UId");
 
+                    b.Property<Guid>("UserFk");
+
                     b.HasKey("Id");
 
                     b.ToTable("MealMacros");
@@ -129,6 +137,8 @@ namespace FitnessApp.API.Migrations
 
                     b.Property<Guid>("UId");
 
+                    b.Property<Guid>("UserFk");
+
                     b.HasKey("Id");
 
                     b.ToTable("SavedMeals");
@@ -140,25 +150,33 @@ namespace FitnessApp.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Age");
+                    b.Property<int?>("Age");
 
                     b.Property<DateTime>("CreatedOn");
 
                     b.Property<DateTime?>("DeletedOn");
 
-                    b.Property<int>("Frequency");
+                    b.Property<int?>("Frequency");
 
-                    b.Property<int>("Gender");
+                    b.Property<int?>("Gender");
 
-                    b.Property<int>("Goal");
+                    b.Property<int?>("Goal");
 
-                    b.Property<int>("Height");
+                    b.Property<int?>("Height");
 
-                    b.Property<int>("Type");
+                    b.Property<string>("Password")
+                        .IsRequired();
 
-                    b.Property<Guid>("UId");
+                    b.Property<string>("Salt");
 
-                    b.Property<int>("Weight");
+                    b.Property<int?>("Type");
+
+                    b.Property<Guid>("Uid");
+
+                    b.Property<string>("Username")
+                        .IsRequired();
+
+                    b.Property<int?>("Weight");
 
                     b.HasKey("Id");
 

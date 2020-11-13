@@ -18,6 +18,6 @@ namespace FitnessApp.API.Models
         
         public string MealName { get; set; }
 
-        public Guid UserUid { get; set; }
+        public Guid UserFk { get; set; }
     }
 }

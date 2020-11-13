@@ -4,6 +4,8 @@ using FitnessApp.API.Services;
 using FitnessApp.API.utils;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 
 namespace FitnessApp.API.Controllers
@@ -38,21 +40,24 @@ namespace FitnessApp.API.Controllers
 
         }
         [HttpPost("")]
-        public IActionResult RegisterNewUser(string username, string password)
+        public IActionResult RegisterNewUser([FromBody] UserAndPassDto usernameAndPasswordDto )
         {
-            var user = _macrosRepository.GetUserByUsername(username);
+            var user = _macrosRepository.GetUserByUsername(usernameAndPasswordDto.Username);
             if(user != null)
             {
-                return NotFound("The username is taken");
+
+                return NotFound(new { message = "Username already taken" });
+
 
             }
 
             var salt = Convert.ToBase64String(Common.GetRandomSalt(16));
             var finalUserDto = new UserDto()
             {
-                Username = username,
+                UId = Guid.NewGuid(),
+                Username = usernameAndPasswordDto.Username,
                 Salt = salt,
-                Password = Convert.ToBase64String(Common.SaltHashPassword(Encoding.ASCII.GetBytes(password), Convert.FromBase64String(salt)))
+                Password = Convert.ToBase64String(Common.SaltHashPassword(Encoding.ASCII.GetBytes(usernameAndPasswordDto.Password), Convert.FromBase64String(salt)))
             };
 
             var finalUser = _mapper.Map<Entities.Users>(finalUserDto);
@@ -60,30 +65,35 @@ namespace FitnessApp.API.Controllers
             _macrosRepository.RegisterUser(finalUser);
             _macrosRepository.Save();
 
-            return Ok("Register Successfully");
+            return Ok(new { message = "Register Succesfully" });
+
         }
 
-        [HttpPost("", Name ="GetUsers")]
-        public IActionResult CreateUser([FromBody] UserForCreationDto user)
+       [HttpPost("login")]
+       public IActionResult LoginUser([FromBody] UserAndPassDto usernameAndPasswordDto)
         {
-            var finalUserDto = new UserDto() {
-                UId = Guid.NewGuid(),
-                CreatedOn = DateTime.Now,
-                Age = user.Age,
-                Gender = user.Gender,
-                Height = user.Height,
-                Weight= user.Weight,
-                Frequency = user.Frequency,
-                Type = user.Type,
-                Goal = user.Goal
-            };
+            var user = _macrosRepository.GetUserByUsername(usernameAndPasswordDto.Username);
+            if(user == null)
+            {
+                
+                return NotFound("The username does not exist");
+            }
 
-            var finalUser = _mapper.Map<Entities.Users>(finalUserDto);
+            var user_post_hash_password = Convert.ToBase64String(
+                    Common.SaltHashPassword(Encoding.ASCII.GetBytes(usernameAndPasswordDto.Password), Convert.FromBase64String(user.Salt)));
 
-            _macrosRepository.AddUser(finalUser);
-            _macrosRepository.Save();
+            if (user_post_hash_password.Equals(user.Password))
+            {
+               
+                return Ok(user.Uid);
+            }
+            else
+            {
+               
+                return NotFound("Incorrect Password");
+            }
 
-            return CreatedAtRoute("GetUsers", finalUserDto);
+
         }
 
         [HttpPut("{userUid:guid}")]
@@ -106,7 +116,10 @@ namespace FitnessApp.API.Controllers
                 Weight = userForUpdate.Weight,
                 Frequency = userForUpdate.Frequency,
                 Type = userForUpdate.Type,
-                Goal = userForUpdate.Goal
+                Goal = userForUpdate.Goal,
+                Username = userEntity.Username,
+                Password = userEntity.Password,
+                Salt = userEntity.Salt
             };
 
             _mapper.Map(finalUserDto, userEntity);

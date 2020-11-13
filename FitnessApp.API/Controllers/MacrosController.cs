@@ -44,37 +44,38 @@ namespace FitnessApp.API.Controllers
                 {
                     Protein = 0,
                     Carbs = 0,
-                    Fats = 0
+                    Fats = 0,
+                    UserFk = userUid
                 };
             }
 
             return Ok(dailyIntakeSummed);
         }
 
-        [HttpGet("{userUid:guid}/dailymeals/history")]
-        public IActionResult GetDailyMealsHistory([FromRoute]Guid userUid)
+        [HttpGet("{userUid:guid}/dailymeals/history/{month}")]
+        public IActionResult GetDailyMealsHistory([FromRoute]Guid userUid, [FromRoute] string month)
         {
-            var dailyMealsHistory = _macrosRepository.GetDailyMealsHistory(userUid);
+            var dailyMealsHistory = _macrosRepository.GetDailyMealsHistory(userUid, month);
 
             if (dailyMealsHistory == null)
             {
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<IEnumerable<DailyMacrosIntakeHistoryDto>>(dailyMealsHistory));
+            return Ok(_mapper.Map<List<DailyMacrosIntakeHistoryDto>>(dailyMealsHistory));
         }
 
         [HttpGet("{userUid:guid}/dailymeals")]
         public IActionResult GetDailyMealMacros([FromRoute] Guid userUid)
         {
-            var dailyMealsMacros = _macrosRepository.GetMealMacros(userUid);
+            var dailyMealMacrosListForUser = _macrosRepository.GetDailyMealMacrosByUser(userUid);
 
-            if (dailyMealsMacros == null)
+            if (dailyMealMacrosListForUser == null)
             {
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<IEnumerable<MealMacrosDto>>(dailyMealsMacros));
+            return Ok(_mapper.Map<List<MealMacrosDto>>(dailyMealMacrosListForUser));
         }
 
         [HttpPost("{userUid:guid}/dailymacrotargets", Name ="GetActiveDailyMacroTargets")]
@@ -91,7 +92,8 @@ namespace FitnessApp.API.Controllers
                 RCarbs = dailyMacroTargets.RCarbs,
                 RFats = dailyMacroTargets.RFats,
                 CustomMacros = dailyMacroTargets.CustomMacros,
-                 UserUid = userUid
+                UserFk = userUid,
+                IsFirstTime = "no"
             };
 
             var finalDailyMacroTargets = _mapper.Map<Entities.DailyMacroTargets>(finalDailyMacroTargetsDto);
@@ -113,7 +115,7 @@ namespace FitnessApp.API.Controllers
                 Carbs = mealMacrosForCreationDto.Carbs,
                 Fats = mealMacrosForCreationDto.Fats,
                 MealName = mealMacrosForCreationDto.MealName,
-                UserUid = userUid
+                UserFk = userUid
             };
 
             var finalMealMacros = _mapper.Map<Entities.MealMacros>(finalMealMacrosDto);
@@ -146,7 +148,8 @@ namespace FitnessApp.API.Controllers
                 RCarbs = dailyMacroTargetsForUpdate.RCarbs,
                 RFats = dailyMacroTargetsForUpdate.RFats,
                 CustomMacros = dailyMacroTargetsForUpdate.CustomMacros,
-                UserUid = userUid
+                UserFk = userUid,
+                IsFirstTime = "no"
             };
 
             _mapper.Map(finalDailyMacroTargetsDto, dailyMacroTargetsEntity);
@@ -158,7 +161,7 @@ namespace FitnessApp.API.Controllers
         [HttpPut("{userUid:guid}/dailymeals/{dailyMealUid:guid}")]
         public IActionResult UpdateMealMacros([FromRoute] Guid userUid, [FromRoute] Guid dailyMealUid, [FromBody] MealMacrosForUpdateDto mealMacrosForUpdateDto)
         {
-            var mealMacrosEntity = _macrosRepository.GetMealMacrosByUid(userUid);
+            var mealMacrosEntity = _macrosRepository.GetMealMacrosByUid(dailyMealUid);
 
             if(mealMacrosEntity == null)
             {
@@ -173,7 +176,7 @@ namespace FitnessApp.API.Controllers
                 Carbs = mealMacrosForUpdateDto.Carbs,
                 Fats = mealMacrosForUpdateDto.Fats,
                 MealName = mealMacrosForUpdateDto.MealName,
-                UserUid = userUid
+                UserFk = userUid
             };
 
             _mapper.Map(finalMealMacrosDto, mealMacrosEntity);

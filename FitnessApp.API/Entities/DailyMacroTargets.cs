@@ -39,5 +39,7 @@ namespace FitnessApp.API.Entities
         public bool CustomMacros { get; set; }
 
         public Guid UserFk { get; set; }
+
+        public string IsFirstTime { get; set; }
     }
 }

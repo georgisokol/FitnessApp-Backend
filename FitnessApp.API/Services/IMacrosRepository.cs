@@ -12,7 +12,8 @@ namespace FitnessApp.API.Services
 
         IEnumerable<DailyMacroIntakeHistory> GetDailyMealsHistory(Guid userUid, string Month);
 
-        IEnumerable<DailyMacroIntakeHistory> GetDailyMealsHistory(Guid userUid);
+        List<DailyMacroIntakeDto> GetDailyMealMacrosSummedForAllUsers();
+
 
         void AddMealMacros(MealMacros mealMacros);
 
@@ -23,6 +24,10 @@ namespace FitnessApp.API.Services
         void AddDailyIntakeToHistory(DailyMacroIntakeHistory dailyMacroIntake);
 
         MealMacros GetMealMacrosByUid(Guid mealMacroUid);
+
+        IEnumerable<MealMacros> GetDailyMealMacrosByUser(Guid userUid);
+
+       
 
         DailyMacroIntakeDto GetDailyMealMacrosSummed(Guid userUid);
 

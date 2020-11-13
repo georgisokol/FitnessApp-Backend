@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FitnessApp.API.Migrations
 {
-    public partial class CreatingMacrosDatabase : Migration
+    public partial class CreatingMacrosDbWithAuth : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,6 +17,7 @@ namespace FitnessApp.API.Migrations
                     UId = table.Column<Guid>(nullable: false),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
+                    UserFk = table.Column<Guid>(nullable: false),
                     Protein = table.Column<int>(maxLength: 4, nullable: false),
                     Carbs = table.Column<int>(maxLength: 4, nullable: false),
                     Fats = table.Column<int>(maxLength: 4, nullable: false)
@@ -41,7 +42,9 @@ namespace FitnessApp.API.Migrations
                     RProtein = table.Column<int>(nullable: false),
                     RCarbs = table.Column<int>(nullable: false),
                     RFats = table.Column<int>(nullable: false),
-                    CustomMacros = table.Column<bool>(nullable: false)
+                    CustomMacros = table.Column<bool>(nullable: false),
+                    UserFk = table.Column<Guid>(nullable: false),
+                    IsFirstTime = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -60,7 +63,8 @@ namespace FitnessApp.API.Migrations
                     Protein = table.Column<int>(maxLength: 4, nullable: false),
                     Carbs = table.Column<int>(maxLength: 4, nullable: false),
                     Fats = table.Column<int>(maxLength: 4, nullable: false),
-                    MealName = table.Column<string>(maxLength: 50, nullable: true)
+                    MealName = table.Column<string>(maxLength: 50, nullable: true),
+                    UserFk = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,7 +83,8 @@ namespace FitnessApp.API.Migrations
                     Protein = table.Column<int>(maxLength: 4, nullable: false),
                     Carbs = table.Column<int>(maxLength: 4, nullable: false),
                     Fats = table.Column<int>(maxLength: 4, nullable: false),
-                    MealName = table.Column<string>(maxLength: 50, nullable: true)
+                    MealName = table.Column<string>(maxLength: 50, nullable: true),
+                    UserFk = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,16 +97,19 @@ namespace FitnessApp.API.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UId = table.Column<Guid>(nullable: false),
+                    Uid = table.Column<Guid>(nullable: false),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
-                    Age = table.Column<int>(nullable: false),
-                    Gender = table.Column<int>(nullable: false),
-                    Height = table.Column<int>(nullable: false),
-                    Weight = table.Column<int>(nullable: false),
-                    Frequency = table.Column<int>(nullable: false),
-                    Type = table.Column<int>(nullable: false),
-                    Goal = table.Column<int>(nullable: false)
+                    Username = table.Column<string>(nullable: false),
+                    Password = table.Column<string>(nullable: false),
+                    Salt = table.Column<string>(nullable: true),
+                    Age = table.Column<int>(nullable: true),
+                    Gender = table.Column<int>(nullable: true),
+                    Height = table.Column<int>(nullable: true),
+                    Weight = table.Column<int>(nullable: true),
+                    Frequency = table.Column<int>(nullable: true),
+                    Type = table.Column<int>(nullable: true),
+                    Goal = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {

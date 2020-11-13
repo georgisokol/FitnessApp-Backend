@@ -24,6 +24,8 @@ namespace FitnessApp.API.Models
 
         public bool CustomMacros { get; set; }
 
-        public Guid UserUid { get; set; }
+        public Guid UserFk { get; set; }
+
+        public string IsFirstTime { get; set; }
     }
 }
